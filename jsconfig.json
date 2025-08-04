@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "baseRul": ".",
+        "paths": {
+            "@/*": "./resources/js/*"
+        }
+    },
+    "exclude": ["node_modules"]
+}

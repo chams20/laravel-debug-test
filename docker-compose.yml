@@ -1,0 +1,65 @@
+version: "3.8"
+
+networks:
+    local: null
+
+volumes:
+    db-data: null
+    web-bootstrap: null
+    web-storage: null
+
+services:
+    db:
+        container_name: db
+        image: "mariadb:10"
+        restart: always
+        networks:
+            - local
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 1
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_USER: "${DB_USERNAME}"
+            MYSQL_PASSWORD: "${DB_PASSWORD}"
+        healthcheck:
+            test:
+                - CMD
+                - mysqladmin
+                - ping
+                - "-h"
+                - localhost
+            timeout: 20s
+            retries: 10
+        volumes:
+            - "db-data:/var/lib/mysql"
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin
+        depends_on:
+            db:
+                condition: service_healthy
+        restart: always
+        networks:
+            - local
+        ports:
+            - "8080:80"
+        environment:
+            PMA_HOST: db
+            PMA_USER: "${DB_USERNAME}"
+            PMA_PASSWORD: "${DB_PASSWORD}"
+            UPLOAD_LIMIT: 10M
+    web:
+        container_name: web
+        build: .
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - local
+        ports:
+            - "80:80"
+        volumes:
+            - ".:/var/www/html:delegated"
+            - "web-bootstrap:/var/www/html/bootstrap"
+            - "web-storage:/var/www/html/storage"
