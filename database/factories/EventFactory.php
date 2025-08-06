@@ -21,9 +21,16 @@ class EventFactory extends Factory
      */
     public function definition()
     {
+        // Générer une date de début (starts_at) aléatoire dans l'année en cours
+        $startsAt = $this->faker->dateTimeThisYear();
+
+        // Créer une date de fin (ends_at) entre 1 et 5 heures après la date de début
+        $endsAt = (clone $startsAt)->modify('+' . rand(1, 5) . ' hours');
+
         return [
             'title' => $this->faker->jobTitle(),
-            'starts_at' => $this->faker->dateTimeThisYear()
+            'starts_at' => $startsAt,
+            'ends_at' => $endsAt,
         ];
-    }
+        }
 }
