@@ -56,13 +56,13 @@ const onSubmit = () => {
 
 // Convert 'DD/MM/YYYY HH:mm' → 'YYYY-MM-DD HH:mm'
 const toDatabaseFormat = (value) => {
-    return moment(value, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm");
+    return moment(value).format("YYYY-MM-DD HH:mm");
 };
 
 
 // Convert 'YYYY-MM-DD HH:mm:ss' → 'DD/MM/YYYY HH:mm'
 const toDisplayFormat = (value) => {
-    return moment(value).format("DD/MM/YYYY HH:mm");
+    return moment(value).format("YYYY-MM-DDTHH:mm");
 };
 
 
@@ -110,20 +110,18 @@ watch(
                 class="mb-6"
             />
 
-
             <Input
                 name="starts_at"
-                label="Start date"
+                label="Start Date"
+                type="datetime-local"
                 v-model="form.starts_at"
-                placeholder="DD/MM/YYYY HH:mm"
-                class="mb-4"
             />
 
             <Input
                 name="ends_at"
-                label="End date"
+                label="End Date"
+                type="datetime-local"
                 v-model="form.ends_at"
-                placeholder="DD/MM/YYYY HH:mm"
             />
 
             <template #footer>
