@@ -35,7 +35,8 @@ const onAddNew = () => {
 const onSubmit = () => {
     const transform = (data) => ({
         ...data,
-        starts_at: data.starts_at.format("YYYY-MM-DD HH:mm"),
+        starts_at: toDatabaseFormat(data.starts_at),
+        ends_at: toDatabaseFormat(data.ends_at),
     });
 
     const requestParams = {
@@ -43,16 +44,21 @@ const onSubmit = () => {
         onSuccess: onClose,
     };
 
-    // Stores or updates the item
     if (editing.value) {
         form.transform(transform).put(
             route("events.update", props.itemToEdit.id),
-            requestParams,
+            requestParams
         );
     } else {
         form.transform(transform).post(route("events.store"), requestParams);
     }
 };
+
+// Convert 'DD/MM/YYYY HH:mm' → 'YYYY-MM-DD HH:mm'
+const toDatabaseFormat = (value) => {
+    return moment(value, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm");
+};
+
 
 // Convert 'YYYY-MM-DD HH:mm:ss' → 'DD/MM/YYYY HH:mm'
 const toDisplayFormat = (value) => {
