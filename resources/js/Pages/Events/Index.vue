@@ -7,6 +7,7 @@ import AddEditDialog from "./Partials/AddEditDialog";
 import Button from "@/Components/Common/Button";
 import Dialog from "@/Components/Common/DialogModal";
 import Table from "@/Components/Common/Table";
+import VueFeather from 'vue-feather';
 
 const format = "YYYY-MM-DD";
 
@@ -81,7 +82,7 @@ const onDelete = () => {
                     </template>
                 </Dialog>
             </div>
-            <Table :data="events" :headings="['Title', 'Date', 'Actions']">
+            <Table :data="events" :headings="['Title', 'Start Date', 'End Date', 'Actions']">
                 <template #row="{ item }">
                     <td>{{ item.title }}</td>
                     <td>
