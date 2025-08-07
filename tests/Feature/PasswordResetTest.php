@@ -55,6 +55,7 @@ class PasswordResetTest extends TestCase
             'email' => $user->email,
         ]);
 
+        // Ici, on appelle la classe pour l'envoie des emails qui va permettre au user de réinitialiser le MDP
         Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
             $response = $this->get('/reset-password/'.$notification->token);
 

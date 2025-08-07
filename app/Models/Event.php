@@ -11,6 +11,12 @@ class Event extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'starts_at',
+        'ends_at',
+    ];
+
     /**
      * Gets the user the event belongs to.
      */
@@ -39,7 +45,7 @@ class Event extends Model
     }
 
     /**
-     * Scope a query to only include events that occure between two dates.
+     * Scope a query to order events by their start date.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  DateTime  $startsAt
