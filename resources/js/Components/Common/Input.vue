@@ -8,6 +8,10 @@ defineProps({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    default: 'text',
+  },
 });
 
 defineEmits(["update:modelValue"]);
@@ -29,11 +33,12 @@ defineExpose({ focus: () => input.value.focus() });
       <span v-if="label">{{ label }}</span>
     </label>
     <input
-      :name="name"
-      ref="input"
-      class="p-3 w-full outline-0 border border-gray-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm transition"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
+        :type="type"
+        :name="name"
+        ref="input"
+        class="p-3 w-full outline-0 border border-gray-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm transition"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
     />
   </div>
 </template>
