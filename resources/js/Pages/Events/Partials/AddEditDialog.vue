@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
+import moment from "moment";
 import Dialog from "@/Components/Common/DialogModal";
 import Button from "@/Components/Common/Button";
 import Input from "@/Components/Common/Input";
@@ -53,12 +54,36 @@ const onSubmit = () => {
     }
 };
 
+// Convert 'YYYY-MM-DD HH:mm:ss' → 'DD/MM/YYYY HH:mm'
+const toDisplayFormat = (value) => {
+    return moment(value).format("DD/MM/YYYY HH:mm");
+};
+
+
 // Called when the dialog closes
 const onClose = () => {
     form.reset();
     show.value = false;
     emit("close");
 };
+
+// Watch itemToEdit to fill form on edit
+watch(
+    () => props.itemToEdit,
+    (newItem) => {
+        if (newItem) {
+            form.title = newItem.title || "";
+            form.starts_at = newItem.starts_at
+                ? toDisplayFormat(newItem.starts_at)
+                : "";
+            form.ends_at = newItem.ends_at
+                ? toDisplayFormat(newItem.ends_at)
+                : "";
+            show.value = true;
+            editing.value = true;
+        }
+    }
+);
 </script>
 
 <template>
@@ -77,6 +102,22 @@ const onClose = () => {
                 label="Title"
                 v-model="form.title"
                 class="mb-6"
+            />
+
+
+            <Input
+                name="starts_at"
+                label="Start date"
+                v-model="form.starts_at"
+                placeholder="DD/MM/YYYY HH:mm"
+                class="mb-4"
+            />
+
+            <Input
+                name="ends_at"
+                label="End date"
+                v-model="form.ends_at"
+                placeholder="DD/MM/YYYY HH:mm"
             />
 
             <template #footer>
