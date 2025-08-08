@@ -8,5 +8,6 @@ export const toDatabaseFormat = (value) => {
 
 // Convert 'YYYY-MM-DD HH:mm:ss' → 'DD/MM/YYYY HH:mm'
 export const toDisplayFormat = (value) => {
-    return moment(value).format("YYYY-MM-DDTHH:mm");
+    return moment(value).format("DD/MM/YYYY HH:mm");
 };
+

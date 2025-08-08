@@ -1,13 +1,14 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { Inertia } from "@inertiajs/inertia";
-import moment from "moment";
 import AppLayout from "@/Layouts/AppLayout";
 import AddEditDialog from "./Partials/AddEditDialog";
 import Button from "@/Components/Common/Button";
 import Dialog from "@/Components/Common/DialogModal";
 import Table from "@/Components/Common/Table";
 import VueFeather from 'vue-feather';
+import moment from "moment";
+import { toDisplayFormat } from "@/utils/formatDate"; // Import de notre fonction utilitaire
 
 const format = "YYYY-MM-DD";
 
@@ -22,7 +23,6 @@ const props = defineProps({
 
 const dateFilters = ref([null, null]);
 
-// Load url params into state if any existed on mount
 onMounted(() => {
     if (props.starts_at) {
         dateFilters.value[0] = moment(props.starts_at, format);
@@ -74,23 +74,21 @@ const onDelete = () => {
                             variant="secondary"
                             class="mr-3"
                             @click="itemToDelete = null"
-                            >Cancel</Button
                         >
-                        <Button variant="danger" @click="onDelete"
-                            >Submit</Button
-                        >
+                            Cancel
+                        </Button>
+                        <Button variant="danger" @click="onDelete">
+                            Submit
+                        </Button>
                     </template>
                 </Dialog>
             </div>
+
             <Table :data="events" :headings="['Title', 'Start Date', 'End Date', 'Actions']">
                 <template #row="{ item }">
                     <td>{{ item.title }}</td>
-                    <td>
-                        {{ moment(item.starts_at).format("HH:mm DD/MM/YYYY") }}
-                    </td>
-                    <td>
-                        {{ moment(item.ends_at).format("HH:mm DD/MM/YYYY") }}
-                    </td>
+                    <td>{{ toDisplayFormat(item.starts_at) }}</td> <!-- Utilisation fonction utilitaire -->
+                    <td>{{ toDisplayFormat(item.ends_at) }}</td>   <!-- Utilisation fonction utilitaire -->
                     <td>
                         <span
                             class="px-2 text-gray-700 hover:text-blue-500 cursor-pointer transition"
