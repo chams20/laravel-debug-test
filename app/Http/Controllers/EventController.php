@@ -26,16 +26,14 @@ class EventController extends Controller
 
     public function store()
     {
-        $data = Request::validate([
-            'title' => ['required', 'max:255'],
-            'starts_at' => ['required', 'date:Y-m-d H:i'],
-            'ends_at' => ['nullable', 'date:Y-m-d H:i'],
-        ]);
+        // Utilisation d'une méthode privée pour réutiliser les règles de validation
+        $data = Request::validate($this->validationRules());
 
+        // Utilisation d'une méthode privée pour parser les dates
         Event::create([
             ...$data,
-            'starts_at' => Carbon::createFromFormat('Y-m-d H:i', $data['starts_at']),
-            'ends_at' => Carbon::createFromFormat('Y-m-d H:i', $data['ends_at']),
+            'starts_at' => $this->parseDate($data['starts_at']),
+            'ends_at' => $this->parseDate($data['ends_at']),
         ]);
 
         return Redirect::back();
@@ -43,15 +41,14 @@ class EventController extends Controller
 
     public function update(Event $event)
     {
-        $data = Request::validate([
-            'title' => ['required', 'max:255'],
-            'starts_at' => ['required', 'date:Y-m-d H:i'],
-            'ends_at' => ['required', 'date:Y-m-d H:i']
-        ]);
+        // Même logique de validation que pour store(), mais réutilisable
+        $data = Request::validate($this->validationRules());
 
+        // Réutilisation du parsing de date
         $event->update([
             ...$data,
-            'starts_at' => Carbon::createFromFormat('Y-m-d H:i', $data['starts_at'])
+            'starts_at' => $this->parseDate($data['starts_at']),
+            'ends_at' => $this->parseDate($data['ends_at']),
         ]);
 
         return Redirect::back();
@@ -62,5 +59,21 @@ class EventController extends Controller
         $event->delete();
 
         return Redirect::back();
+    }
+
+    // Ajout : méthode privée pour centraliser les règles de validation
+    private function validationRules(): array
+    {
+        return [
+            'title' => ['required', 'max:255'],
+            'starts_at' => ['required', 'date:Y-m-d H:i'],
+            'ends_at' => ['required', 'date:Y-m-d H:i'],
+        ];
+    }
+
+    // Ajout : méthode privée pour parser une date au format Carbon
+    private function parseDate(?string $date): ?Carbon
+    {
+        return $date ? Carbon::createFromFormat('Y-m-d H:i', $date) : null;
     }
 }
