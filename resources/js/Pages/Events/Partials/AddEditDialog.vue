@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
-import moment from "moment";
+import { toDatabaseFormat, toDisplayFormat } from "@/utils/formatDate";
 import Dialog from "@/Components/Common/DialogModal";
 import Button from "@/Components/Common/Button";
 import Input from "@/Components/Common/Input";
@@ -53,18 +53,6 @@ const onSubmit = () => {
         form.transform(transform).post(route("events.store"), requestParams);
     }
 };
-
-// Convert 'DD/MM/YYYY HH:mm' → 'YYYY-MM-DD HH:mm'
-const toDatabaseFormat = (value) => {
-    return moment(value).format("YYYY-MM-DD HH:mm");
-};
-
-
-// Convert 'YYYY-MM-DD HH:mm:ss' → 'DD/MM/YYYY HH:mm'
-const toDisplayFormat = (value) => {
-    return moment(value).format("YYYY-MM-DDTHH:mm");
-};
-
 
 // Called when the dialog closes
 const onClose = () => {
