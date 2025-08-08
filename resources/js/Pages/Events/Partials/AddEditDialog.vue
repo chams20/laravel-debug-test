@@ -87,10 +87,20 @@ watch(
             <span class="ml-2">Add new</span>
         </Button>
         <Dialog :show="show" @close="onClose">
-            <template #header>{{
-                editing ? "Edit event" : "Add new event"
-            }}</template>
+            <template #header>
+                {{ editing ? "Edit event" : "Add new event" }}
+            </template>
 
+            <!-- Affichage des erreurs -->
+            <div v-if="form.hasErrors" class="mb-4 text-sm text-red-600">
+                <ul>
+                    <li v-for="(error, key) in form.errors" :key="key">
+                        {{ error }}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Form inputs -->
             <Input
                 name="title"
                 label="Title"
@@ -113,9 +123,7 @@ watch(
             />
 
             <template #footer>
-                <Button variant="secondary" class="mr-3" @click="onClose"
-                    >Cancel</Button
-                >
+                <Button variant="secondary" class="mr-3" @click="onClose">Cancel</Button>
                 <Button @click="onSubmit">Submit</Button>
             </template>
         </Dialog>
